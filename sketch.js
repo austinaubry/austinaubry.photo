@@ -1,7 +1,7 @@
 /*
 Developed by Jake Welch
 http://www.jakewelch.design/
-20 February 2024
+13 March 2024
 
 Austin Aubry photography portfolio, landing page pixelation animation 
 */
