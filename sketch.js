@@ -207,7 +207,7 @@ function calculateLayout() {
 function mousePressed() {
   for (let { x, y, width, height, link } of imagePositions) {
     if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height) {
-      window.location.href = link;
+      window.parent.location.href = link;
       break;
     }
   }
@@ -225,7 +225,7 @@ function touchStarted() {
       const { x, y, width, height, link } = imagePositions[i];
       if (touchX >= x && touchX <= x + width && touchY >= y && touchY <= y + height) {
         console.log("Opening link for image:", i); // Log which image is being clicked
-        window.location.href = link;
+        window.parent.location.href = link;
         return false;
       }
     }
