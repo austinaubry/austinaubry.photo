@@ -24,6 +24,8 @@ let paddingMobile = 10; // Spacing in px between images on mobile
 let lowestSpeed = 0.3; // For control over the randomness
 let highestSpeed = 3; // For control over the randomness
 let maxResThreshold = 0.2; //if 30% of max res reached, then set image to full res
+let fps = 8; //frame rate 
+let staggerEvery = 3; //effects stagger every 3rd image, can be adjusted
 
 let maxResSpeed = highestSpeed; 
 let res = [];
@@ -59,14 +61,14 @@ function preload() {
 
   // Assign speeds to images based on their modulo 3 result
   for (let i = 0; i < numImages; i++) {
-    currentResSpeeds[i] = speeds[i % 3]; // Assigns one of the three speeds based on the image index
+    currentResSpeeds[i] = speeds[i % staggerEvery]; // Assigns one of the three speeds based on the image index
   }
 }
 
 // Initialize the canvas, all the layout & image sizing
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  frameRate(8);
+  frameRate(fps);
   calculateLayout();
 }
 
