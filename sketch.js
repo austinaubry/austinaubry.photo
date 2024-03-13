@@ -21,8 +21,8 @@ let paddingDesktop = 20; // Spacing in px between images on desktop
 let paddingMobile = 10; // Spacing in px between images on mobile
 
 // Pixelation animation variables
-let lowestSpeed = 0.2; // For control over the randomness
-let highestSpeed = 5; // For control over the randomness
+let lowestSpeed = 0.3; // For control over the randomness
+let highestSpeed = 3; // For control over the randomness
 let maxResThreshold = 0.2; //if 30% of max res reached, then set image to full res
 
 let maxResSpeed = highestSpeed; 
@@ -50,9 +50,16 @@ let imagePositions = [];
 // Preload all the images
 function preload() {
   for (let i = 0; i < numImages; i++) {
-    imgs[i] = loadImage(`images/${i}.jpg`);
-    res[i] = 1;
-    currentResSpeeds[i] = random(lowestSpeed, highestSpeed);
+    imgs[i] = loadImage(`images/${i}.jpg`); // Loading images remains the same
+    res[i] = 1; // Initial resolution
+  }
+
+  // Initialize speeds for each of the three patterns
+  let speeds = [random(lowestSpeed, highestSpeed), random(lowestSpeed, highestSpeed), random(lowestSpeed, highestSpeed)];
+
+  // Assign speeds to images based on their modulo 3 result
+  for (let i = 0; i < numImages; i++) {
+    currentResSpeeds[i] = speeds[i % 3]; // Assigns one of the three speeds based on the image index
   }
 }
 
@@ -87,10 +94,10 @@ function draw() {
 
   // Calculate the total height of the grid
   let totalGridHeight = rowHeights.reduce((acc, curr) => acc + curr, 0) + padding * (rowHeights.length - 1);
+
   // Adjust yOffset to center the grid vertically
   let yOffset = (windowHeight - totalGridHeight) / 2;
 
-  // Reset variables for drawing
   xOffset = padding;
   currentRow = 0;
   let accumulatedHeight = yOffset;
