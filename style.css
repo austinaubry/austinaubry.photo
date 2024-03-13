@@ -6,3 +6,11 @@ html, body {
 canvas {
   display: block;
 }
+
+html {
+    cursor: url("https://freight.cargo.site/t/original/i/T1576191086227377448750029530353/porfolio-cursor.png"), auto !important;
+}
+
+a {
+    cursor: url("https://freight.cargo.site/t/original/i/X1576191086190483960602610427121/porfolio-cursor-hover.png"), auto !important;
+}
