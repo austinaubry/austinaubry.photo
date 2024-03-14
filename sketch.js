@@ -67,7 +67,7 @@ function preload() {
 
 // Initialize the canvas, all the layout & image sizing
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(window.innerWidth, window.innerHeight);
   frameRate(fps);
   calculateLayout();
 }
@@ -157,17 +157,17 @@ imgSizes.forEach(({ width, height }, i) => {
 
 // Window resizing function
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+  resizeCanvas(window.innerWidth, window.innerHeight);
   calculateLayout();
 }
 
 // Function to calculate layout parameters for desktop & mobile
 function calculateLayout() {
-  imgsPerRow = windowWidth < 860 ? mobileRow : desktopRow;
-  padding = windowWidth < 860 ? paddingMobile : paddingDesktop;
+  imgsPerRow = window.innerWidth < 860 ? mobileRow : desktopRow;
+  padding = window.innerWidth < 860 ? paddingMobile : paddingDesktop;
 
   let totalPadding = padding * (imgsPerRow + 1);
-  let totalAvailableWidth = windowWidth - totalPadding;
+  let totalAvailableWidth = window.innerWidth - totalPadding;
   let dynamicWidth = totalAvailableWidth / imgsPerRow;
 
   maxRes = dynamicWidth;
@@ -196,7 +196,7 @@ function calculateLayout() {
   });
 
   let totalContentHeight = yOffset + rowHeight;
-  let startYOffset = (windowHeight - totalContentHeight) / 2;
+  let startYOffset = (window.innerHeight - totalContentHeight) / 2;
 
   imagePositions.forEach((pos, index) => {
     imagePositions[index].y += startYOffset;
