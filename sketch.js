@@ -1,10 +1,14 @@
 /*
 Developed by Jake Welch
 http://www.jakewelch.design/
-13 March 2024
+Last updated March 27 2024
 
 Austin Aubry photography portfolio, landing page pixelation animation 
 */
+
+///////////////////////////////
+// START OF GLOBAL VARIABLES //
+///////////////////////////////
 
 // Image handling variables
 let imgs = [];
@@ -32,6 +36,10 @@ let res = [];
 let currentResSpeeds = [];
 let maxRes;
 
+// Image raise animation variables
+let imgRaiseAmt = 20; // Amount to raise images by on hover (in pixels)
+let imgRaiseSpeed = 0.8; // Speed of the raise effect (higher value is faster, lower is slower)
+
 // Image links (make sure to keep the order of the photos the same as the order of images.)
 let imageLinks = [
   "https://austinaubry.photo/analog-reflections-in-japan-1",  // 0.jpg link
@@ -48,6 +56,10 @@ let imageLinks = [
   "https://austinaubry.photo/events-1"                        // 11.jpg link
 ];
 let imagePositions = [];
+
+//////////////////////////////
+// END OF GLOBAL VARIABLES //
+/////////////////////////////
 
 // Preload all the images
 function preload() {
@@ -67,8 +79,8 @@ function preload() {
 
 // Initialize the canvas, all the layout & image sizing
 function setup() {
-  createCanvas(window.innerWidth, window.innerHeight);
-  frameRate(fps);
+  createCanvas(windowWidth, windowHeight);
+  frameRate(8);
   calculateLayout();
 }
 
@@ -80,6 +92,10 @@ function draw() {
   let xOffset = padding;
   let rowHeights = [];
   let currentRow = 0;
+  let isHoveringOverAnyImage = false; // Track if the cursor is hovering over any image
+
+  // Reset xOffset for drawing logic
+  xOffset = padding;
 
   imgSizes.forEach(({ width, height }, i) => {
     if (i % imgsPerRow === 0 && i !== 0) {
@@ -91,6 +107,8 @@ function draw() {
         rowHeights[currentRow] = height;
       }
     }
+
+    // Adjust xOffset for the next image
     xOffset += width + padding;
   });
 
@@ -100,74 +118,86 @@ function draw() {
   // Adjust yOffset to center the grid vertically
   let yOffset = (windowHeight - totalGridHeight) / 2;
 
+  // Reset xOffset and currentRow for actual drawing
   xOffset = padding;
   currentRow = 0;
   let accumulatedHeight = yOffset;
 
+  imgSizes.forEach(({ width, height }, i) => {
+    if (i % imgsPerRow === 0 && i !== 0) {
+      currentRow++;
+      xOffset = padding;
+      accumulatedHeight += rowHeights[currentRow - 1] + padding;
+    }
+
   // Draw the images with random pixelation speeds
-imgSizes.forEach(({ width, height }, i) => {
-  if (i % imgsPerRow === 0 && i !== 0) {
-    currentRow++;
-    xOffset = padding;
-    accumulatedHeight += rowHeights[currentRow - 1] + padding;
-  }
-
-  if (currentResSpeeds[i] < maxResSpeed) {
-    currentResSpeeds[i] += lowestSpeed;
-  }
-
-  if (res[i] < maxRes) {
-    res[i] += currentResSpeeds[i];
-    if (res[i] / maxRes >= maxResThreshold) {
-      res[i] = maxRes;
+   if (currentResSpeeds[i] < maxResSpeed) {
+      currentResSpeeds[i] += lowestSpeed;
     }
-  }
 
-  let dynamicLayer = createGraphics(Math.ceil(res[i]), Math.ceil((res[i] / imgs[i].width) * imgs[i].height));
-  dynamicLayer.image(imgs[i], 0, 0, dynamicLayer.width, dynamicLayer.height);
-
-  let staticLayer = createGraphics(width, height);
-  staticLayer.clear();
-  staticLayer.noSmooth();
-  staticLayer.image(dynamicLayer, 0, 0, width, height);
-
-  image(staticLayer, xOffset, accumulatedHeight);
-
-  imagePositions[i] = { x: xOffset, y: accumulatedHeight, width, height, link: imageLinks[i] };
-
-  xOffset += width + padding;
-
-  dynamicLayer.remove();
-  staticLayer.remove();
-});
-
-  // Hand cursor on hover logic (moved outside the forEach loop for efficiency)
-  let isHovering = false;
-  for (let { x, y, width, height } of imagePositions) {
-    if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height) {
-      cursor(HAND);
-      isHovering = true;
-      break;
+    if (res[i] < maxRes) {
+      res[i] += currentResSpeeds[i];
+      if (res[i] / maxRes >= maxResThreshold) {
+        res[i] = maxRes;
+      }
     }
-  }
-  if (!isHovering) {
+
+    let dynamicLayer = createGraphics(Math.ceil(res[i]), Math.ceil((res[i] / imgs[i].width) * imgs[i].height));
+    dynamicLayer.image(imgs[i], 0, 0, dynamicLayer.width, dynamicLayer.height);
+
+    let staticLayer = createGraphics(width, height);
+    staticLayer.clear();
+    staticLayer.noSmooth();
+    staticLayer.image(dynamicLayer, 0, 0, width, height);
+
+    // Hover effect logic (as previously described)
+    let isHovering = mouseX >= imagePositions[i].x && mouseX <= imagePositions[i].x + width && 
+                     mouseY >= imagePositions[i].y && mouseY <= imagePositions[i].y + height && 
+                     windowWidth >= 860; // Applies only for desktop
+
+    if (isHovering) {
+      isHoveringOverAnyImage = true;
+      if (imagePositions[i].hoverOffset === undefined) imagePositions[i].hoverOffset = 0;
+      imagePositions[i].hoverOffset = lerp(imagePositions[i].hoverOffset, imgRaiseAmt, imgRaiseSpeed);
+    } else {
+      if (imagePositions[i].hoverOffset === undefined) imagePositions[i].hoverOffset = 0;
+      imagePositions[i].hoverOffset = lerp(imagePositions[i].hoverOffset, 0, imgRaiseSpeed);
+    }
+
+    let adjustedYOffset = accumulatedHeight - (imagePositions[i].hoverOffset || 0);
+
+    // Draw the image with adjusted yOffset
+    image(staticLayer, xOffset, adjustedYOffset);
+
+    xOffset += width + padding;
+
+    dynamicLayer.remove();
+    staticLayer.remove();
+  });
+
+  // Update cursor based on hovering state
+  if (isHoveringOverAnyImage) {
+    cursor(HAND);
+  } else {
     cursor(ARROW);
   }
 }
 
+
+
 // Window resizing function
 function windowResized() {
-  resizeCanvas(window.innerWidth, window.innerHeight);
+  resizeCanvas(windowWidth, windowHeight);
   calculateLayout();
 }
 
 // Function to calculate layout parameters for desktop & mobile
 function calculateLayout() {
-  imgsPerRow = window.innerWidth < 860 ? mobileRow : desktopRow;
-  padding = window.innerWidth < 860 ? paddingMobile : paddingDesktop;
+  imgsPerRow = windowWidth < 860 ? mobileRow : desktopRow;
+  padding = windowWidth < 860 ? paddingMobile : paddingDesktop;
 
   let totalPadding = padding * (imgsPerRow + 1);
-  let totalAvailableWidth = window.innerWidth - totalPadding;
+  let totalAvailableWidth = windowWidth - totalPadding;
   let dynamicWidth = totalAvailableWidth / imgsPerRow;
 
   maxRes = dynamicWidth;
@@ -196,7 +226,7 @@ function calculateLayout() {
   });
 
   let totalContentHeight = yOffset + rowHeight;
-  let startYOffset = (window.innerHeight - totalContentHeight) / 2;
+  let startYOffset = (windowHeight - totalContentHeight) / 2;
 
   imagePositions.forEach((pos, index) => {
     imagePositions[index].y += startYOffset;
@@ -207,7 +237,7 @@ function calculateLayout() {
 function mousePressed() {
   for (let { x, y, width, height, link } of imagePositions) {
     if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height) {
-      window.parent.location.href = link;
+      window.location.href = link;
       break;
     }
   }
@@ -225,7 +255,7 @@ function touchStarted() {
       const { x, y, width, height, link } = imagePositions[i];
       if (touchX >= x && touchX <= x + width && touchY >= y && touchY <= y + height) {
         console.log("Opening link for image:", i); // Log which image is being clicked
-        window.parent.location.href = link;
+        window.location.href = link;
         return false;
       }
     }
