@@ -79,7 +79,7 @@ function preload() {
 
 // Initialize the canvas, all the layout & image sizing
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(window.innerWidth, window.innerHeight);
   frameRate(8);
   calculateLayout();
 }
