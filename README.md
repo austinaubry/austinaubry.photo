@@ -1,7 +1,7 @@
 Landing page pixelation animation for https://austinaubry.photo/
 Developed by Jake Welch
 https://www.jakewelch.design/
-8 March 2024
+Updated 28 March 2024
 
 
 INSTRUCTIONS FOR UPDATING / ADDING NEW PHOTOS:
