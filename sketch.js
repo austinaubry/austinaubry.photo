@@ -1,7 +1,7 @@
 /*
 Developed by Jake Welch
 http://www.jakewelch.design/
-Last updated March 27 2024
+Last updated March 28 2024
 
 Austin Aubry photography portfolio, landing page pixelation animation 
 */
@@ -24,21 +24,23 @@ let padding;
 let paddingDesktop = 20; // Spacing in px between images on desktop
 let paddingMobile = 10; // Spacing in px between images on mobile
 
+// Image raise animation variables
+let imgRaiseAmt = 20; // Amount to raise images by on hover (in pixels)
+let imgRaiseSpeed = 0.8; // Speed of the raise effect (higher value is faster, lower is slower)
+let imgRaiseFPS = 24; // Image raising animation frame rate
+
 // Pixelation animation variables
 let lowestSpeed = 0.3; // For control over the randomness
 let highestSpeed = 3; // For control over the randomness
 let maxResThreshold = 0.2; //if 30% of max res reached, then set image to full res
-let fps = 8; //frame rate 
+let pixelFPS = 8; //pixel animation frame rate 
 let staggerEvery = 3; //effects stagger every 3rd image, can be adjusted
+let pixelationUpdateCounter = 0;
 
 let maxResSpeed = highestSpeed; 
 let res = [];
 let currentResSpeeds = [];
 let maxRes;
-
-// Image raise animation variables
-let imgRaiseAmt = 20; // Amount to raise images by on hover (in pixels)
-let imgRaiseSpeed = 0.8; // Speed of the raise effect (higher value is faster, lower is slower)
 
 // Image links (make sure to keep the order of the photos the same as the order of images.)
 let imageLinks = [
@@ -80,7 +82,7 @@ function preload() {
 // Initialize the canvas, all the layout & image sizing
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
-  frameRate(8);
+  frameRate(imgRaiseFPS);
   calculateLayout();
 }
 
@@ -131,6 +133,8 @@ function draw() {
     }
 
   // Draw the images with random pixelation speeds
+  if (pixelationUpdateCounter % (imgRaiseFPS / pixelFPS) == 0) { 
+
    if (currentResSpeeds[i] < maxResSpeed) {
       currentResSpeeds[i] += lowestSpeed;
     }
@@ -141,6 +145,7 @@ function draw() {
         res[i] = maxRes;
       }
     }
+  }
 
     let dynamicLayer = createGraphics(Math.ceil(res[i]), Math.ceil((res[i] / imgs[i].width) * imgs[i].height));
     dynamicLayer.image(imgs[i], 0, 0, dynamicLayer.width, dynamicLayer.height);
@@ -181,6 +186,7 @@ function draw() {
   } else {
     cursor(ARROW);
   }
+  pixelationUpdateCounter++;
 }
 
 
