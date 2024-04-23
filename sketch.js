@@ -44,18 +44,18 @@ let maxRes;
 
 // Image links (make sure to keep the order of the photos the same as the order of images.)
 let imageLinks = [
-  "https://austinaubry.photo/analog-reflections-in-japan-1",  // 0.jpg link
-  "https://austinaubry.photo/census",                         // 1.jpg link
-  "https://austinaubry.photo/impressions-1",                  // 2.jpg link
-  "https://austinaubry.photo/consolations-in-color",          // 3.jpg link
-  "https://austinaubry.photo/marc-jacobs-ss23",               // 4.jpg link
-  "https://austinaubry.photo/marc-jacobs-fw23",               // 5.jpg link
-  "https://austinaubry.photo/hermes-aw23-1",                  // 6.jpg link
-  "https://austinaubry.photo/hypebeast-salomon-sportstyle-1", // 7.jpg link
-  "https://austinaubry.photo/hypebeast-tommy-hilfiger",       // 8.jpg link
-  "https://austinaubry.photo/properties",                     // 9.jpg link
-  "https://austinaubry.photo/musicians-1",                    // 10.jpg link
-  "https://austinaubry.photo/events-1"                        // 11.jpg link
+  "https://austinaubry.photo/confluence-in-time",             // 0.jpg link
+  "https://austinaubry.photo/analog-reflections-in-japan-1",  // 1.jpg link
+  "https://austinaubry.photo/census",                         // 2.jpg link
+  "https://austinaubry.photo/impressions-1",                  // 3.jpg link
+  "https://austinaubry.photo/consolations-in-color",          // 4.jpg link
+  "https://austinaubry.photo/marc-jacobs-ss23",               // 5.jpg link
+  "https://austinaubry.photo/marc-jacobs-fw23",               // 6.jpg link
+  "https://austinaubry.photo/hermes-aw23-1",                  // 7.jpg link
+  "https://austinaubry.photo/hypebeast-salomon-sportstyle-1", // 8.jpg link
+  "https://austinaubry.photo/hypebeast-tommy-hilfiger",       // 9.jpg link
+  "https://austinaubry.photo/properties",                     // 10.jpg link
+  "https://austinaubry.photo/musicians-1"                     // 11.jpg link
 ];
 let imagePositions = [];
 
